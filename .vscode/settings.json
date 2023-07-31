@@ -1,0 +1,14 @@
+{
+  "cSpell.ignorePaths": [
+    "package-lock.json",
+    "package.json",
+    "node_modules",
+    "vscode-extension",
+    ".git/objects",
+    ".vscode",
+    ".vscode-insiders",
+    ".eslintrc.js"
+  ],
+  "cSpell.ignoreWords": ["hachee", "automapper", "typeorm"],
+  "cSpell.words": ["datepicker", "heroicons", "languagedetector"]
+}
