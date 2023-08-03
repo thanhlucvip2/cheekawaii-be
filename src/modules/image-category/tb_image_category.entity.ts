@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseEntity } from '@utils/base-entity';
 import { TbImageEntity } from '@modules/image/tb_image.entity';
+import { TbAccountEntity } from '@modules/account/tb_account.entity';
 
 @Entity('tb_image_category')
 export class TbImageCategoryEntity extends BaseEntity {
@@ -19,4 +20,7 @@ export class TbImageCategoryEntity extends BaseEntity {
     (tbImageEntity) => tbImageEntity.tbImageCategory,
   )
   tbImage: TbImageEntity[];
+
+  @ManyToOne(() => TbAccountEntity, (tbAccount) => tbAccount.tbImageCategory)
+  tbAccount: TbAccountEntity;
 }

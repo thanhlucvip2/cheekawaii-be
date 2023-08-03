@@ -30,7 +30,9 @@ export class AuthLoginController {
     };
 
     try {
-      const accountDB = await this.accountService.findOne(authLoginDto.email);
+      const accountDB = await this.accountService.findOneByEmail(
+        authLoginDto.email,
+      );
       if (accountDB === null) {
         throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
       }

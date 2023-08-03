@@ -1,14 +1,19 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 
 import { JWT_SECRET_KEY } from '@configs/app.config';
 import { LoggedInterface } from '@modules/auth/utils/logged.interface';
-import { ROLE } from '@utils/enums';
+import { AccountService } from '@modules/account/account.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor() {
+  constructor(private readonly accountService: AccountService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -18,11 +23,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   async validate(payload: any, done: VerifiedCallback) {
     const id = payload?.id;
-    const accountDB = {
-      username: 'thanhlucvip',
-      email: 'doanthanhluc91bvh@gmail.com',
-      role: ROLE.ADMIN.VALUE,
-    };
+
+    const accountDB = await this.accountService.findOne(id);
+    if (accountDB === null) {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+
     if (!accountDB) {
       return done(new UnauthorizedException('unauthorized-access'), false);
     }
@@ -30,7 +36,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     const data: LoggedInterface = {
       id,
       email: accountDB.email,
-      username: accountDB.username,
       role: accountDB.role,
     };
 

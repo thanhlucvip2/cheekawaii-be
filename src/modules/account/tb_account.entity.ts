@@ -1,7 +1,9 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { BaseEntity } from '@utils/base-entity';
 import { ROLE } from '@utils/enums';
+import { TbImageCategoryEntity } from '@modules/image-category/tb_image_category.entity';
+import { Role } from '@utils/types';
 
 @Entity('tb_account')
 export class TbAccountEntity extends BaseEntity {
@@ -23,5 +25,11 @@ export class TbAccountEntity extends BaseEntity {
     nullable: true,
     default: ROLE.USER.VALUE,
   })
-  role: string;
+  role: Role;
+
+  @OneToMany(
+    () => TbImageCategoryEntity,
+    (tbImageCategory) => tbImageCategory.tbAccount,
+  )
+  tbImageCategory: TbImageCategoryEntity[];
 }

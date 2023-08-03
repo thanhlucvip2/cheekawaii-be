@@ -20,6 +20,9 @@ export class TbImageEntity extends BaseEntity {
   @Column()
   image_category_id: string;
 
+  @Column()
+  account_id: string;
+
   @ManyToOne(
     () => TbImageCategoryEntity,
     (tbImageCategoryEntity) => tbImageCategoryEntity.tbImage,
