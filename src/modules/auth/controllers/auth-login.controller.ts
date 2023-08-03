@@ -1,4 +1,3 @@
-import { hashSync, compareSync } from 'bcryptjs';
 import {
   Body,
   Controller,
@@ -10,9 +9,10 @@ import {
 import { Response } from 'express';
 import { assign } from 'lodash';
 
+import { AccountService } from '@modules/account/account.service';
+
 import { AuthService } from '../auth.service';
 import { AuthLoginDTO } from '../dto';
-import { AccountService } from '@modules/account/account.service';
 
 @Controller('auth')
 export class AuthLoginController {
