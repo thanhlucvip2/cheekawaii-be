@@ -2,11 +2,11 @@ import { AutoMap } from '@automapper/classes';
 
 export class CreateImageCategoryMapper {
   @AutoMap()
-  parent_path: number;
+  parent_path: string;
 
   @AutoMap()
-  current_path: number;
+  current_path: string;
 
   @AutoMap()
-  name: number;
+  name: string;
 }

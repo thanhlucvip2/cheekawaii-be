@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseEntity } from '@utils/base-entity';
 import { TbImageEntity } from '@modules/image/tb_image.entity';
@@ -16,17 +16,21 @@ export class TbImageCategoryEntity extends BaseEntity {
   current_path: string;
 
   @AutoMap()
-  @Column({ type: 'varchar', length: 1000 })
+  @Column({ type: 'nvarchar', length: 1000 })
   name: string;
+
+  @Column()
+  account_id: string;
 
   @AutoMap()
   @OneToMany(
     () => TbImageEntity,
     (tbImageEntity) => tbImageEntity.tbImageCategory,
   )
-  tbImage: TbImageEntity[];
+  tbImage?: TbImageEntity[];
 
   @AutoMap()
   @ManyToOne(() => TbAccountEntity, (tbAccount) => tbAccount.tbImageCategory)
-  tbAccount: TbAccountEntity;
+  @JoinColumn({ name: 'account_id' })
+  tbAccount?: TbAccountEntity;
 }

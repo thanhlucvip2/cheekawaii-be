@@ -1,7 +1,7 @@
 import { Role } from '@utils/types';
 import { Request, Response } from 'express';
 export interface LoggedInterface {
-  id: number;
+  id: string;
   email: string;
   role: Role;
   roleUser?: string;

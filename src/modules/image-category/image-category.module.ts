@@ -6,6 +6,7 @@ import { ImageCategoryService } from './image-category.service';
 import { TbImageCategoryEntity } from './tb_image_category.entity';
 import { ImageCategoryRepository } from './image-category.repository';
 import { CreateImageCategoryProfile } from './mapper/create-image-category/create-image-category-profile';
+import { CreateImageCategoryFeature } from './feature/create-image-category/create-image-category.feature';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TbImageCategoryEntity])],
@@ -16,6 +17,8 @@ import { CreateImageCategoryProfile } from './mapper/create-image-category/creat
     ImageCategoryRepository,
 
     CreateImageCategoryProfile,
+
+    CreateImageCategoryFeature,
   ],
 })
 export class ImageCategoryModule {}

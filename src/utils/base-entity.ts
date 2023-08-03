@@ -7,14 +7,14 @@ import {
 
 export class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @CreateDateColumn()
-  create_at: Date;
+  create_at?: Date;
 
   @UpdateDateColumn()
-  update_at: Date;
+  update_at?: Date;
 
   @Column({ type: 'text', nullable: true })
-  note: string;
+  note?: string;
 }

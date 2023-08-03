@@ -8,7 +8,7 @@ import {
 } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { CreateImageCategoryMapper } from './create-image-category.mapper';
-import { CreateImageCategoryDto } from '@modules/image-category/dto/create-image-category.dto';
+import { CreateImageCategoryDto } from '@modules/image-category/feature/create-image-category/create-image-category.dto';
 
 @Injectable()
 export class CreateImageCategoryProfile extends AutomapperProfile {

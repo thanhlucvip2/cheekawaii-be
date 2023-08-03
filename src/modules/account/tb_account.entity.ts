@@ -7,7 +7,7 @@ import { TbImageCategoryEntity } from '@modules/image-category/tb_image_category
 
 @Entity('tb_account')
 export class TbAccountEntity extends BaseEntity {
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, unique: true })
   email: string;
 
   @Column({ type: 'varchar', length: 100 })

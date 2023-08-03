@@ -12,6 +12,6 @@
     ".vscode-insiders",
     ".eslintrc.js"
   ],
-  "cSpell.ignoreWords": ["hachee", "automapper", "typeorm"],
+  "cSpell.ignoreWords": ["hachee", "automapper", "typeorm", "nvarchar"],
   "cSpell.words": ["datepicker", "heroicons", "languagedetector"]
 }
