@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { BaseEntity } from '@utils/base-entity';
 import { ROLE } from '@utils/enums';
-import { TbImageCategoryEntity } from '@modules/image-category/tb_image_category.entity';
 import { Role } from '@utils/types';
+import { BaseEntity } from '@utils/base-entity';
+import { TbImageCategoryEntity } from '@modules/image-category/tb_image_category.entity';
 
 @Entity('tb_account')
 export class TbAccountEntity extends BaseEntity {

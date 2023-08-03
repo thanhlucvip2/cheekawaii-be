@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { assign } from 'lodash';
 import { AuthGuard } from '@nestjs/passport';
+import { ROLE } from '@utils/enums';
 
 import {
   LoggedInterface,
@@ -17,7 +18,6 @@ import {
 } from '@modules/auth/utils/logged.interface';
 
 import { ServiceGuard } from '../guards';
-import { ROLE } from '@utils/enums';
 
 @UseGuards(AuthGuard('jwt'), ServiceGuard)
 @Controller('/auth')
