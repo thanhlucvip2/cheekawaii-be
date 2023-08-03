@@ -1,4 +1,4 @@
-import { API_PREFIX_PATH } from '@configs/app.config';
+import { hashSync, compareSync } from 'bcryptjs';
 import {
   Body,
   Controller,
@@ -12,10 +12,14 @@ import { assign } from 'lodash';
 
 import { AuthService } from '../auth.service';
 import { AuthLoginDTO } from '../dto';
+import { AccountService } from '@modules/account/account.service';
 
-@Controller(`${API_PREFIX_PATH}/auth`)
+@Controller('auth')
 export class AuthLoginController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly accountService: AccountService,
+  ) {}
 
   @Post('login')
   async login(@Body() authLoginDto: AuthLoginDTO, @Res() res: Response) {
@@ -26,18 +30,17 @@ export class AuthLoginController {
     };
 
     try {
-      const accountDB = { password: 'dasdas', username: '11', id: 1 };
+      const accountDB = await this.accountService.findOne(authLoginDto.email);
       if (accountDB === null) {
         throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
       }
-
-      // const checkPasswordHash = this.authService.comparePassword(
-      //   authLoginDto.password,
-      //   accountDB.password,
-      // );
-      // if (!checkPasswordHash) {
-      //   throw new HttpException('unauthorized', HttpStatus.UNAUTHORIZED);
-      // }
+      const checkPasswordHash = this.authService.comparePassword(
+        authLoginDto.password,
+        accountDB.password,
+      );
+      if (!checkPasswordHash) {
+        throw new HttpException('unauthorized', HttpStatus.UNAUTHORIZED);
+      }
 
       const token = await this.authService.createTokenAndRefreshToken(
         accountDB.id,

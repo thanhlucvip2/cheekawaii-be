@@ -6,16 +6,16 @@ import { ROLE } from '@utils/enums';
 @Entity('tb_account')
 export class TbAccountEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 100 })
-  email: number;
+  email: string;
 
   @Column({ type: 'varchar', length: 100 })
-  first_name: number;
+  first_name: string;
 
   @Column({ type: 'varchar', length: 100 })
-  last_name: number;
+  last_name: string;
 
   @Column({ type: 'varchar', length: 100 })
-  password: number;
+  password: string;
 
   @Column({
     type: 'smallint',
@@ -23,5 +23,5 @@ export class TbAccountEntity extends BaseEntity {
     nullable: true,
     default: ROLE.USER.VALUE,
   })
-  role: number;
+  role: string;
 }

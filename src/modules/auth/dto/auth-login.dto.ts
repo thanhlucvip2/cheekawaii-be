@@ -12,7 +12,7 @@ export class AuthLoginDTO {
   @IsNotEmpty({ message: 'email-empty' })
   @Validate(IsMailSpam)
   @IsEmail({}, { message: 'email-format-wrong' })
-  username: string;
+  email: string;
 
   @IsNotEmpty({ message: 'password-empty' })
   @MinLength(8, { message: 'password-min-6' })

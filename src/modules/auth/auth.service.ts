@@ -14,7 +14,7 @@ import { SALT_ROUNDS } from '@utils/constants';
 
 @Injectable()
 export class AuthService {
-  async createTokenAndRefreshToken(accountId: number) {
+  async createTokenAndRefreshToken(accountId: string) {
     const token: string = await this.signPayload(
       { id: accountId },
       JWT_EXPIRED_TIME_TOKEN,
