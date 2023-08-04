@@ -5,8 +5,5 @@ export class CreateImageCategoryMapper {
   parent_path: string;
 
   @AutoMap()
-  current_path: string;
-
-  @AutoMap()
   name: string;
 }

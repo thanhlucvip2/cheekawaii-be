@@ -26,3 +26,73 @@ export const checkEmailSpam = (email: string) => {
 export const randomNumber = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
 };
+
+export const convertVNStringToKeyString = (inputText: string): string => {
+  const mapAccents = {
+    à: 'a',
+    á: 'a',
+    ả: 'a',
+    ã: 'a',
+    ạ: 'a',
+    ầ: 'a',
+    ấ: 'a',
+    ẩ: 'a',
+    ẫ: 'a',
+    ậ: 'a',
+    è: 'e',
+    é: 'e',
+    ẻ: 'e',
+    ẽ: 'e',
+    ẹ: 'e',
+    ề: 'e',
+    ế: 'e',
+    ể: 'e',
+    ễ: 'e',
+    ệ: 'e',
+    ì: 'i',
+    í: 'i',
+    ỉ: 'i',
+    ĩ: 'i',
+    ị: 'i',
+    ò: 'o',
+    ó: 'o',
+    ỏ: 'o',
+    õ: 'o',
+    ọ: 'o',
+    ồ: 'o',
+    ố: 'o',
+    ổ: 'o',
+    ỗ: 'o',
+    ộ: 'o',
+    ù: 'u',
+    ú: 'u',
+    ủ: 'u',
+    ũ: 'u',
+    ụ: 'u',
+    ừ: 'u',
+    ứ: 'u',
+    ử: 'u',
+    ữ: 'u',
+    ự: 'u',
+    ỳ: 'y',
+    ý: 'y',
+    ỷ: 'y',
+    ỹ: 'y',
+    ỵ: 'y',
+    đ: 'd',
+    ă: 'a',
+    â: 'a',
+    ô: 'o',
+    ơ: 'o',
+    ê: 'e',
+    ư: 'u',
+  };
+  const regex = /[^\w\s]/gi;
+  return inputText
+    .toLocaleLowerCase()
+    .split('')
+    .map((char) => mapAccents[char] || char)
+    .join('')
+    .replace(/\s+/g, '_')
+    .replace(regex, '');
+};

@@ -8,11 +8,6 @@ export class CreateImageCategoryDto {
   parentPath: string;
 
   @AutoMap()
-  @IsNotEmpty({ message: 'currentPath-empty' })
-  @Length(1, 1000)
-  currentPath: string;
-
-  @AutoMap()
   @IsNotEmpty({ message: 'name-empty' })
   @Length(1, 1000)
   name: string;
