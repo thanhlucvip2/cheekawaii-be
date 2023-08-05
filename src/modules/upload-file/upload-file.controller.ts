@@ -30,6 +30,10 @@ import {
 import { GetAllFileDto } from './features/get-all-file/get-all-file.dto';
 import { CreateFolderFeature } from './features/create-folder/create-folder.feature';
 import { CreateFolderDto } from './features/create-folder/create-folder.dto';
+import { PostFileFeature } from './features/post-file/post-file.feature';
+import { URL_FILE } from '@configs/app.config';
+import { PostFileDto } from './features/post-file/post-file.dto';
+import { convertVNStringToKeyString } from '@utils/helper';
 
 @UseGuards(AuthGuard('jwt'), ServiceGuard)
 @Controller('upload')
@@ -37,6 +41,7 @@ export class UploadFileController {
   constructor(
     private readonly getAllFileFeature: GetAllFileFeature,
     private readonly createFolderFeature: CreateFolderFeature,
+    private readonly postFileFeature: PostFileFeature,
   ) {}
 
   @Get()
@@ -99,6 +104,52 @@ export class UploadFileController {
     return res.status(httpStatusCode).json(resData);
   }
 
+  @Post('/file')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: URL_FILE,
+        filename: (req, file, callback) => {
+          const uniqueSuffix = Date.now();
+          const filename = `${uniqueSuffix}_${convertVNStringToKeyString(
+            file.originalname,
+          )}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
+  async handleUpload(
+    @Query() queryParam: PostFileDto,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: RequestCustom,
+    @Res() res: ResponseCustom,
+  ) {
+    const httpStatusCode = HttpStatus.OK;
+    const resData = {
+      statusCode: httpStatusCode,
+      success: 'upload-file-success',
+      data: null,
+    };
+
+    try {
+      const { user: currentUser } = req;
+      const result = await this.postFileFeature.index({
+        file,
+        accountId: currentUser.id,
+        currentPath: queryParam.currentPath,
+      });
+
+      assign(resData, {
+        data: result,
+      });
+    } catch (error) {
+      throw new HttpException(error.message, httpStatusCode);
+    }
+
+    return res.status(httpStatusCode).json(resData);
+  }
+
   // @Get(':id')
   // async findById(@Param('id') fileId: string) {
   //   return this.uploadFileService.getOneImage(fileId);
@@ -107,26 +158,6 @@ export class UploadFileController {
   // @Get('/file/:id')
   // async downloadFile(@Param('id') id: string, @Res() res) {
   //   res.sendFile(`${URL_FILE}/${id}`, { root: '' });
-  // }
-
-  // @Post('/file')
-  // @UseInterceptors(
-  //   FileInterceptor('file', {
-  //     storage: diskStorage({
-  //       destination: URL_FILE,
-  //       filename: (req, file, callback) => {
-  //         const uniqueSuffix =
-  //           Date.now() + '-' + Math.round(Math.random() * 1e9);
-  //         const ext = extname(file.originalname);
-  //         const filename = `${uniqueSuffix}${ext}`;
-  //         console.log(filename);
-  //         callback(null, filename);
-  //       },
-  //     }),
-  //   }),
-  // )
-  // async handleUpload(@UploadedFile() file: Express.Multer.File) {
-  //   return this.uploadFileService.saveFile(file);
   // }
 
   // @Delete(':id')

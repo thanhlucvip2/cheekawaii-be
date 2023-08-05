@@ -27,6 +27,11 @@ export const randomNumber = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
 };
 
+export const convertSizeFileToString = (size: number): string => {
+  const sizeMB = (size / 1024 ** 2).toFixed(2);
+  return sizeMB;
+};
+
 export const convertVNStringToKeyString = (inputText: string): string => {
   let result = inputText;
   result = result.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
@@ -43,6 +48,7 @@ export const convertVNStringToKeyString = (inputText: string): string => {
   result = result.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, 'U');
   result = result.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, 'Y');
   result = result.replace(/Đ/g, 'D');
+  result = result.replace(/-/g, '_');
 
   return result.toLocaleLowerCase().split('').join('').replace(/\s+/g, '_');
 };
