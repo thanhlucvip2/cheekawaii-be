@@ -28,7 +28,7 @@ export const randomNumber = (min: number, max: number) => {
 };
 
 export const convertSizeFileToString = (size: number): string => {
-  const sizeMB = (size / 1024 ** 2).toFixed(2);
+  const sizeMB = (size / 1024 ** 2).toFixed(2) + 'MB';
   return sizeMB;
 };
 

@@ -5,6 +5,9 @@ export class GetFileMapper {
   createAt: Date;
 
   @AutoMap()
+  id: string;
+
+  @AutoMap()
   updateAt: Date;
 
   @AutoMap()
@@ -14,13 +17,13 @@ export class GetFileMapper {
   typeFile: string;
 
   @AutoMap()
-  size: number;
+  size: string;
 
   @AutoMap()
   name: string;
 
   @AutoMap()
-  urlFile: string;
+  url: string;
 
   @AutoMap()
   type: string;

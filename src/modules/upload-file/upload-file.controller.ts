@@ -16,24 +16,25 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
-import { UploadFileService } from './upload-file.service';
 import { ServiceGuard } from '@modules/auth/guards';
 import { AuthGuard } from '@nestjs/passport';
-import { GetAllFileFeature } from './features/get-all-file/get-all-file.feature';
 import { assign } from 'lodash';
+
 import {
-  LoggedInterface,
   RequestCustom,
   ResponseCustom,
 } from '@modules/auth/utils/logged.interface';
+import { URL_FILE } from '@configs/app.config';
+import { convertVNStringToKeyString } from '@utils/helper';
+
+import { GetAllFileFeature } from './features/get-all-file/get-all-file.feature';
 import { GetAllFileDto } from './features/get-all-file/get-all-file.dto';
 import { CreateFolderFeature } from './features/create-folder/create-folder.feature';
 import { CreateFolderDto } from './features/create-folder/create-folder.dto';
 import { PostFileFeature } from './features/post-file/post-file.feature';
-import { URL_FILE } from '@configs/app.config';
 import { PostFileDto } from './features/post-file/post-file.dto';
-import { convertVNStringToKeyString } from '@utils/helper';
+import { GetFileFeature } from './features/get-file/get-file.feature';
+import { DeleteFileFeature } from './features/delete-file/delete-file.feature';
 
 @UseGuards(AuthGuard('jwt'), ServiceGuard)
 @Controller('upload')
@@ -42,6 +43,8 @@ export class UploadFileController {
     private readonly getAllFileFeature: GetAllFileFeature,
     private readonly createFolderFeature: CreateFolderFeature,
     private readonly postFileFeature: PostFileFeature,
+    private readonly getFileFeature: GetFileFeature,
+    private readonly deleteFileFeature: DeleteFileFeature,
   ) {}
 
   @Get()
@@ -75,7 +78,7 @@ export class UploadFileController {
   }
 
   @Post('create-folder')
-  async findOne(
+  async createFolder(
     @Body() payload: CreateFolderDto,
     @Req() req: RequestCustom,
     @Res() res: ResponseCustom,
@@ -83,7 +86,7 @@ export class UploadFileController {
     const httpStatusCode = HttpStatus.OK;
     const resData = {
       statusCode: httpStatusCode,
-      success: 'get-one-file-success',
+      success: 'create-folder-success',
       data: null,
     };
 
@@ -104,7 +107,7 @@ export class UploadFileController {
     return res.status(httpStatusCode).json(resData);
   }
 
-  @Post('/file')
+  @Post('file')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -150,23 +153,54 @@ export class UploadFileController {
     return res.status(httpStatusCode).json(resData);
   }
 
-  // @Get(':id')
-  // async findById(@Param('id') fileId: string) {
-  //   return this.uploadFileService.getOneImage(fileId);
-  // }
+  @Get('get-file/:fileName')
+  async downloadFile(
+    @Param('fileName') fileName: string,
+    @Req() req: RequestCustom,
+    @Res() res: ResponseCustom,
+  ) {
+    try {
+      const { user: currentUser } = req;
+      const result = await this.getFileFeature.index({
+        fileName,
+        accountId: currentUser.id,
+      });
+      if (!result) {
+        throw new HttpException('File không tồn tại', HttpStatus.BAD_REQUEST);
+      }
+      return res.sendFile(`${URL_FILE}/${fileName}`, { root: '' });
+    } catch (error) {
+      throw new HttpException('File không tồn tại', HttpStatus.BAD_REQUEST);
+    }
+  }
 
-  // @Get('/file/:id')
-  // async downloadFile(@Param('id') id: string, @Res() res) {
-  //   res.sendFile(`${URL_FILE}/${id}`, { root: '' });
-  // }
+  @Delete(':id')
+  async deleteFile(
+    @Param('id') id: string,
+    @Req() req: RequestCustom,
+    @Res() res: ResponseCustom,
+  ) {
+    const httpStatusCode = HttpStatus.OK;
+    const resData = {
+      statusCode: httpStatusCode,
+      success: 'delete-file-success',
+      data: null,
+    };
 
-  // @Delete(':id')
-  // deleteFile(@Param('id') id: string) {
-  //   return this.uploadFileService.delete(id);
-  // }
+    try {
+      const { user: currentUser } = req;
+      const result = await this.deleteFileFeature.index({
+        accountId: currentUser.id,
+        id,
+      });
 
-  // @Put(':id')
-  // upadateImage(@Param('id') id: string, @Body('fileName') fileName: string) {
-  //   return this.uploadFileService.updateFile(id, fileName);
-  // }
+      assign(resData, {
+        data: result,
+      });
+    } catch (error) {
+      throw new HttpException(error.message, httpStatusCode);
+    }
+
+    return res.status(httpStatusCode).json(resData);
+  }
 }

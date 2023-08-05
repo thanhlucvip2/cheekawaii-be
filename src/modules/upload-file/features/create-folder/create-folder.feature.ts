@@ -30,7 +30,7 @@ export class CreateFolderFeature {
       );
     }
     // save
-    const newFolder = await this.uploadFileService.create({
+    await this.uploadFileService.create({
       account_id: accountId,
       name: payload.name,
       current_path: payload.currentPath,
@@ -38,8 +38,8 @@ export class CreateFolderFeature {
       type: TYPE_FILE.FOLDER.VALUE,
       size: null,
       type_file: null,
-      url_file: null,
     });
-    return newFolder;
+
+    return null;
   }
 }

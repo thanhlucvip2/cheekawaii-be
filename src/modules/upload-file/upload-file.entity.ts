@@ -18,10 +18,6 @@ export class UploadFileEntity extends BaseEntity {
   name: string;
 
   @AutoMap()
-  @Column({ type: 'text', nullable: true })
-  url_file: string;
-
-  @AutoMap()
   @Column({
     type: 'smallint',
     default: TYPE_FILE.FOLDER.VALUE,

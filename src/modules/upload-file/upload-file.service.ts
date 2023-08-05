@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UploadFileRepository } from './upload-file.repository';
 import { UploadFileEntity } from './upload-file.entity';
 import { GetFileMapper } from './mapper/get-file.mapper';
@@ -26,9 +26,23 @@ export class UploadFileService {
     return result;
   }
 
+  async findOne(payload: { id: string; accountId: string }) {
+    const data = await this.uploadFileRepository.findOne({
+      where: {
+        id: payload.id,
+        account_id: payload.accountId,
+      },
+    });
+
+    const result = this.mapper.map(data, UploadFileEntity, GetFileMapper);
+
+    return result;
+  }
+
   async create(payload: UploadFileEntity) {
     const newData = await this.uploadFileRepository.create(payload);
     await this.uploadFileRepository.save(payload);
+
     const result = this.mapper.map(newData, UploadFileEntity, GetFileMapper);
     return result;
   }
@@ -48,51 +62,35 @@ export class UploadFileService {
     const result = this.mapper.map(data, UploadFileEntity, GetFileMapper);
     return result;
   }
-  // async getOneImage(fileId: string) {
-  //   const image = await this.uploadFileRepository.findOne({
-  //     where: { fileId },
-  //   });
-  //   if (!image) {
-  //     throw new HttpException(
-  //       'Image không tồn tại trong hệ thống',
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  //   return image;
-  // }
 
-  // async saveFile(file: Express.Multer.File) {
-  //   if (!file) {
-  //     throw new HttpException('Vui lòng gửi đúng file', HttpStatus.BAD_REQUEST);
-  //   }
-  //   const sizeMB = (file.size / 1024 ** 2).toFixed(2);
+  async findOneByFileName(payload: { accountId: string; fileName }) {
+    const data = await this.uploadFileRepository.findOne({
+      where: {
+        account_id: payload.accountId,
+        path: payload.fileName,
+      },
+    });
+    const result = this.mapper.map(data, UploadFileEntity, GetFileMapper);
+    return result;
+  }
 
-  //   const dataFile = {
-  //     typeFile: file.fieldname,
-  //     size: `${sizeMB} MB`,
-  //     fileName: file.originalname,
-  //     fileId: file.filename,
-  //     urlFile: `/upload/file/${file.filename}`,
-  //   };
-  //   const newFileDB = await this.uploadFileRepository.create(dataFile);
-  //   await this.uploadFileRepository.save(newFileDB);
-  //   return newFileDB;
-  // }
+  async delete({ accountId, id }: { id: string; accountId: string }) {
+    const findFile = await this.findOne({
+      id,
+      accountId,
+    });
+    console.log(findFile);
 
-  // async delete(fileId: string) {
-  //   const image = await this.uploadFileRepository.findOne({
-  //     where: { fileId },
-  //   });
-  //   if (!image) {
-  //     throw new HttpException(
-  //       'Image không tồn tại trong hệ thống',
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  //   unlinkSync(`${URL_FILE}/${image.fileId}`);
-  //   await this.uploadFileRepository.delete({ fileId });
-  //   return 'Xóa thành công!';
-  // }
+    if (!findFile) {
+      throw new HttpException(
+        'File không tồn tại trong hệ thông',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.uploadFileRepository.delete({ id });
+    return findFile;
+  }
 
   // async updateFile(fileId: string, fileName: string) {
   //   if (!fileName) {

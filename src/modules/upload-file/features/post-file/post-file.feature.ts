@@ -32,11 +32,9 @@ export class PostFileFeature {
       type_file: sentences[sentences.length - 1],
       path: file.filename,
       type: TYPE_FILE.FILE.VALUE,
-      url_file: null,
     };
 
     const saveFileDB = await this.uploadFileService.create(dataFile);
-
     return saveFileDB;
   }
 }

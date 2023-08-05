@@ -9,6 +9,8 @@ import { GetFileProfile } from './mapper/get-file-profile';
 import { GetAllFileFeature } from './features/get-all-file/get-all-file.feature';
 import { CreateFolderFeature } from './features/create-folder/create-folder.feature';
 import { PostFileFeature } from './features/post-file/post-file.feature';
+import { GetFileFeature } from './features/get-file/get-file.feature';
+import { DeleteFileFeature } from './features/delete-file/delete-file.feature';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UploadFileEntity])],
@@ -22,6 +24,8 @@ import { PostFileFeature } from './features/post-file/post-file.feature';
     GetAllFileFeature,
     CreateFolderFeature,
     PostFileFeature,
+    GetFileFeature,
+    DeleteFileFeature,
   ],
 })
 export class UploadFileModule {}

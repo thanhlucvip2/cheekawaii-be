@@ -12,6 +12,7 @@ import { Injectable } from '@nestjs/common';
 import { UploadFileEntity } from '@modules/upload-file/upload-file.entity';
 import { GetFileMapper } from './get-file.mapper';
 import { TYPE_FILE } from '@utils/enums';
+import { convertSizeFileToString } from '@utils/helper';
 
 @Injectable()
 export class GetFileProfile extends AutomapperProfile {
@@ -40,6 +41,14 @@ export class GetFileProfile extends AutomapperProfile {
         forMember(
           (d) => d.typeFile,
           mapFrom((s) => s.type_file),
+        ),
+        forMember(
+          (d) => d.url,
+          mapFrom((s) => `/upload/get-file/${s.path}`),
+        ),
+        forMember(
+          (d) => d.size,
+          mapFrom((s) => convertSizeFileToString(s.size)),
         ),
       );
     };
