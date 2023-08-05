@@ -1,21 +1,21 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
+import { MulterModule } from '@nestjs/platform-express';
+import { APP_GUARD } from '@nestjs/core';
 
 import { NoXPoweredByMiddleware } from '@middlewares/no-x-powered-by.middleware';
 import { THROTTLE_LIMIT, THROTTLE_TTL } from '@utils/constants';
 import { DatabaseModule } from '@database/database.module';
-import { ImageModule } from '@modules/image/image.module';
-import { ImageCategoryModule } from '@modules/image-category/image-category.module';
 import { AuthModule } from '@modules/auth/auth.module';
+import { URL_FILE } from '@configs/app.config';
+import { UploadFileModule } from '@modules/upload-file/upload-file.module';
 
 @Module({
   imports: [
     DatabaseModule,
-    ImageModule,
-    ImageCategoryModule,
+    UploadFileModule,
     AuthModule,
     ThrottlerModule.forRoot({
       ttl: THROTTLE_TTL,
@@ -24,6 +24,7 @@ import { AuthModule } from '@modules/auth/auth.module';
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
+    MulterModule.register({ dest: URL_FILE }),
   ],
   controllers: [],
   providers: [

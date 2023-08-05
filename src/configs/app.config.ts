@@ -21,3 +21,6 @@ export const CIPHER_IV = process.env.CIPHER_IV;
 // AUTH
 export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 export const JWT_EXPIRED_TIME_TOKEN = process.env.JWT_EXPIRED_TIME_TOKEN;
+
+// URL FILE
+export const URL_FILE = process.env.URL_FILE;
