@@ -5,6 +5,7 @@ export interface LoggedInterface {
   email: string;
   role: Role;
   roleUser?: string;
+  fullName: string;
 }
 export type RequestCustom = Request & {
   user: LoggedInterface;
