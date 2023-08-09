@@ -36,7 +36,6 @@ import { PostFileDto } from './features/post-file/post-file.dto';
 import { GetFileFeature } from './features/get-file/get-file.feature';
 import { DeleteFileFeature } from './features/delete-file/delete-file.feature';
 
-@UseGuards(AuthGuard('jwt'), ServiceGuard)
 @Controller('upload')
 export class UploadFileController {
   constructor(
@@ -47,6 +46,7 @@ export class UploadFileController {
     private readonly deleteFileFeature: DeleteFileFeature,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'), ServiceGuard)
   @Get()
   async find(
     @Query() queryParam: GetAllFileDto,
@@ -77,6 +77,7 @@ export class UploadFileController {
     return res.status(httpStatusCode).json(resData);
   }
 
+  @UseGuards(AuthGuard('jwt'), ServiceGuard)
   @Post('create-folder')
   async createFolder(
     @Body() payload: CreateFolderDto,
@@ -107,6 +108,7 @@ export class UploadFileController {
     return res.status(httpStatusCode).json(resData);
   }
 
+  @UseGuards(AuthGuard('jwt'), ServiceGuard)
   @Post('file')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -159,21 +161,22 @@ export class UploadFileController {
     @Req() req: RequestCustom,
     @Res() res: ResponseCustom,
   ) {
-    try {
-      const { user: currentUser } = req;
-      const result = await this.getFileFeature.index({
-        fileName,
-        accountId: currentUser.id,
-      });
-      if (!result) {
-        throw new HttpException('File không tồn tại', HttpStatus.BAD_REQUEST);
-      }
-      return res.sendFile(`${URL_FILE}/${fileName}`, { root: '' });
-    } catch (error) {
-      throw new HttpException('File không tồn tại', HttpStatus.BAD_REQUEST);
-    }
+    // try {
+    // const { user: currentUser } = req;
+    // const result = await this.getFileFeature.index({
+    //   fileName,
+    //   accountId: currentUser.id,
+    // });
+    // if (!result) {
+    //   throw new HttpException('File không tồn tại', HttpStatus.BAD_REQUEST);
+    // }
+    return res.sendFile(`${URL_FILE}/${fileName}`, { root: '' });
+    // } catch (error) {
+    //   throw new HttpException('File không tồn tại', HttpStatus.BAD_REQUEST);
+    // }
   }
 
+  @UseGuards(AuthGuard('jwt'), ServiceGuard)
   @Delete(':id')
   async deleteFile(
     @Param('id') id: string,

@@ -19,6 +19,7 @@ export class UploadFileService {
         ...condition,
       },
       relations: relations,
+      order: { type: 'ASC' },
     });
 
     const result = this.mapper.mapArray(data, UploadFileEntity, GetFileMapper);

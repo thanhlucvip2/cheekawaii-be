@@ -18,7 +18,7 @@ async function bootstrap() {
   app.enableCors();
 
   // Apply middleware helmet
-  app.use(helmet());
+  // app.use(helmet());
 
   // Apply middleware compression
   app.use(compression());
